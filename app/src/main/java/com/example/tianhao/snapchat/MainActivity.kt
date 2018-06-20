@@ -17,10 +17,7 @@ import android.support.v4.app.FragmentActivity
 import android.util.Log
 import android.R.attr.password
 import android.R.attr.password
-
-
-
-
+import com.google.firebase.database.FirebaseDatabase
 
 
 class MainActivity : AppCompatActivity() {
@@ -68,6 +65,7 @@ class MainActivity : AppCompatActivity() {
                         if (task.isSuccessful) {
                             // Sign in success, update UI with the signed-in user's information
                             Toast.makeText(this, "createUserWithEmail:success", Toast.LENGTH_LONG).show()
+                            FirebaseDatabase.getInstance().getReference().child("users").child(task.result.user.uid).child("email").setValue(emailEditText.text.toString())
                             logIn()
                         } else {
                             // If sign in fails, display a message to the user.
