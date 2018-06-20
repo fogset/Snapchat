@@ -90,11 +90,14 @@ class CreateSnapActivity : AppCompatActivity() {
         uploadTask.addOnFailureListener(OnFailureListener {
             // Handle unsuccessful uploads
             Toast.makeText(this, "UPloadFailed", Toast.LENGTH_SHORT).show()
-        }).addOnSuccessListener(OnSuccessListener<Any> {taskSnapshot ->
+        }).addOnSuccessListener(OnSuccessListener<Any> {
             Log.i("URL", "upload sucessfully")
-
+            val intent = Intent(this,ChooseUserActivity::class.java)
+             startActivity(intent)
         })
 
     }
+
+
 
 }

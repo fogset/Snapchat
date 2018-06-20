@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
     }
     fun loginButton(view: View) {
 
-        Toast.makeText(this, "email: " + emailEditText.text.toString() + " password:" +passwordEditText.text.toString(), Toast.LENGTH_LONG).show()
+        //Toast.makeText(this, "email: " + emailEditText.text.toString() + " password:" +passwordEditText.text.toString(), Toast.LENGTH_LONG).show()
         if (! emailEditText.text.toString().isEmpty() && !emailEditText.text.toString().isEmpty()) {
             mAuth.signInWithEmailAndPassword(emailEditText.text.toString(), passwordEditText.text.toString())
                     .addOnCompleteListener(this) { task ->
