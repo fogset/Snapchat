@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.ListAdapter
 import android.widget.ListView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
@@ -23,7 +24,7 @@ class ChooseUserActivity : AppCompatActivity() {
 
         chooseUserListView = findViewById(R.id.chooseUserListView)
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1,emails)
-        chooseUserListView?.adapter = adapter
+        chooseUserListView?.adapter = adapter as ListAdapter?
 
         FirebaseDatabase.getInstance().getReference().child("users").addChildEventListener(object : ChildEventListener{
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
