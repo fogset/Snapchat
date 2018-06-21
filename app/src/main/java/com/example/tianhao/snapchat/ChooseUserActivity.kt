@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -40,7 +41,7 @@ class ChooseUserActivity : AppCompatActivity() {
         })
 
         chooseUserListView?.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, position, id ->
-            val snapMap: Map<String, String> = mapOf("from" to "", "imageName" to "", "imageURL" to "", "message" to "")
+            val snapMap: Map<String, String> = mapOf("from" to FirebaseAuth.getInstance().currentUser!!.email!!, "imageName" to intent.getStringExtra("imageName"), "imageURL" to "", "message" to intent.getStringExtra("message"))
 
             FirebaseDatabase.getInstance().getReference().child("users").child(keys.get(position)).child("snaps").push().setValue(snapMap)
 
@@ -48,5 +49,6 @@ class ChooseUserActivity : AppCompatActivity() {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         }
+
     }
 }
