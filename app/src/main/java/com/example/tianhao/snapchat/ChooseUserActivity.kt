@@ -1,7 +1,9 @@
 package com.example.tianhao.snapchat
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import com.google.firebase.database.ChildEventListener
@@ -13,6 +15,7 @@ class ChooseUserActivity : AppCompatActivity() {
 
     var chooseUserListView: ListView? = null
     var emails = arrayListOf<String>()
+    var keys = arrayListOf<String>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_choose_user)
@@ -25,6 +28,7 @@ class ChooseUserActivity : AppCompatActivity() {
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 val email = p0.child("email").value as String
                 emails.add(email)
+                keys.add(p0.key!!)
                 adapter.notifyDataSetChanged()
             }
 
@@ -34,5 +38,15 @@ class ChooseUserActivity : AppCompatActivity() {
             override fun onChildRemoved(p0: DataSnapshot) {}
 
         })
+
+        chooseUserListView?.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, position, id ->
+            val snapMap: Map<String, String> = mapOf("from" to "", "imageName" to "", "imageURL" to "", "message" to "")
+
+            FirebaseDatabase.getInstance().getReference().child("users").child(keys.get(position)).child("snaps").push().setValue(snapMap)
+
+            val intent = Intent(this, SnapsActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+        }
     }
 }
