@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ListAdapter
 import android.widget.ListView
@@ -19,7 +20,7 @@ class SnapsActivity : AppCompatActivity() {
     val mAuth = FirebaseAuth.getInstance()
     var snapsListView: ListView? = null
     var emails = arrayListOf<String>()
-
+    var snaps: ArrayList<DataSnapshot> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_snaps)
@@ -31,6 +32,7 @@ class SnapsActivity : AppCompatActivity() {
         FirebaseDatabase.getInstance().getReference().child("users").child(mAuth.currentUser?.uid!!).child("snaps").addChildEventListener(object: ChildEventListener{
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
                 emails.add(p0.child("from").value as String)
+                snaps.add(p0!!)
                 adapter.notifyDataSetChanged()
             }
             override fun onCancelled(p0: DatabaseError) {}
@@ -39,7 +41,14 @@ class SnapsActivity : AppCompatActivity() {
             override fun onChildRemoved(p0: DataSnapshot) {}
 
         })
-
+        snapsListView?.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, position, id ->
+            val snapshot = snaps.get(position)
+            var intent = Intent(this, ViewSnapActivity::class.java)
+            intent.putExtra("imageName", snapshot.child("imageName").value as String)
+            intent.putExtra("message", snapshot.child("message").value as String)
+            intent.putExtra("snapKey", snapshot.key)
+            startActivity(intent)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

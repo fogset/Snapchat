@@ -78,28 +78,33 @@ class CreateSnapActivity : AppCompatActivity() {
 
     fun nextClicked(view: View){
         // Get the data from an ImageView as bytes
-        createSnapImageView?.setDrawingCacheEnabled(true)
-        createSnapImageView?.buildDrawingCache()
-        val bitmap = (createSnapImageView?.getDrawable() as BitmapDrawable).bitmap
-        val baos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-        val data = baos.toByteArray()
+        try{
+            createSnapImageView?.setDrawingCacheEnabled(true)
+            createSnapImageView?.buildDrawingCache()
+            val bitmap = (createSnapImageView?.getDrawable() as BitmapDrawable).bitmap
+            val baos = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+            val data = baos.toByteArray()
 
-        val uploadTask = FirebaseStorage.getInstance().getReference().child("images").child(imageName).putBytes(data)
+            val uploadTask = FirebaseStorage.getInstance().getReference().child("images").child(imageName).putBytes(data)
 
-        uploadTask.addOnFailureListener(OnFailureListener {
-            // Handle unsuccessful uploads
-            Toast.makeText(this, "UPloadFailed", Toast.LENGTH_SHORT).show()
-        }).addOnSuccessListener(OnSuccessListener<Any> {
+            uploadTask.addOnFailureListener(OnFailureListener {
+                // Handle unsuccessful uploads
+                Toast.makeText(this, "UPloadFailed", Toast.LENGTH_SHORT).show()
+            }).addOnSuccessListener(OnSuccessListener<Any> {
 
-            Log.i("URL", "upload sucessfully")
+                Log.i("URL", "upload sucessfully")
+                val intent = Intent(this,ChooseUserActivity::class.java)
+                intent.putExtra("imageName", imageName)
+                intent.putExtra("message", messageEditText?.text.toString())
+                startActivity(intent)
+            })
 
-
+        }catch(e:Exception){
             val intent = Intent(this,ChooseUserActivity::class.java)
-            intent.putExtra("imageName", imageName)
-            intent.putExtra("message", messageEditText?.text.toString())
             startActivity(intent)
-        })
+            print("some error occrued")
+        }
 
     }
 
